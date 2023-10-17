@@ -1,30 +1,69 @@
 extends KinematicBody2D
 
-const SPEED = 200  # Adjust the player's movement speed as needed
+export var SPEED = 200
+export var SHOVEL_DAMAGE = 50
+
 var motion = Vector2()
-var facing = "right"
+var _facing = "right"
+var _animation_player
+var _sprite
+var _shovel
+var _shovel_collider
+var _attacking
 
-onready var _animation_player = $Player/AnimationPlayer
+func _ready():
+	_animation_player = $AnimationPlayer
+	_sprite = $Sprite
+	_facing = "right"
+	_shovel = $ShovelHit
+	_shovel_collider = $ShovelHit/ShovelCollider
+	_attacking = false
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	# Handle player input
-	motion = Vector2()
+	motion = Vector2(
+		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
+		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
+	).normalized() * SPEED
 	
-	if Input.is_action_pressed("move_up"):
-		motion.y -= 1
-	elif Input.is_action_pressed("move_down"):
-		motion.y += 1
-	elif Input.is_action_pressed("move_left"):
-		motion.x -= 1
-		_animation_player.play("WalkLeft")
-		facing = "left"
-	elif Input.is_action_pressed("move_right"):
-		motion.x += 1
-		_animation_player.play("WalkRight")
-		facing = "right"
+	# Handle animation
+	if !Input.is_action_pressed("attack"):
+		_shovel_collider.disabled = true
+		if (motion.x > 0 && !_attacking):
+			_animation_player.play("WalkRight")
+			_facing = "right"
+		elif(motion.x < 0 && !_attacking):
+			_animation_player.play("WalkLeft")
+			_facing = "left"
+		else:
+			_stop_movement()
+		
+		# Move the player character
+		move_and_slide(motion)
 
-	motion = motion.normalized() * SPEED
+func _unhandled_input(event):
+	if (event.is_action_pressed("attack")):
+		_shovel_attack()
+		pass
+	pass
+
+func _stop_movement():
+	_animation_player.stop()
+	_sprite.frame = 7 if (_facing == "right") else 5
+
+func _shovel_attack():
+	_stop_movement()
 	
-	# Move the player character
-	move_and_slide(motion)
+	print("Attack start")
+	if (_facing == "right"):
+		#print("Attack Right")
+		_animation_player.play("AttackRight")
+	else:
+		#print("Attack Left")
+		_animation_player.play("AttackLeft")
+	print("Attack stop")
 
+func _on_ShovelHit_body_entered(body):
+	print("Body Entered")
+	if (body.has_method("take_damage")):
+		body.take_damage(SHOVEL_DAMAGE)

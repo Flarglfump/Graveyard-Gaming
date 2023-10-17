@@ -1,15 +1,17 @@
 extends KinematicBody2D
 
 export var MAX_HP: int = 100
-export var SPEED: int = 100
+export var SPEED: int = 15
 var motion = Vector2()
 
 var cur_HP: int
 
 func _ready():
 	cur_HP = MAX_HP
+	motion = Vector2.LEFT
 
 func take_damage(damage):
+	print("Taking damage: ", damage)
 	cur_HP -= damage
 	if cur_HP <= 0:
 		die()
@@ -20,7 +22,7 @@ func die():
 func set_direction(direction):
 	motion = direction
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	# Handle player input
 
 	motion = motion.normalized() * SPEED
