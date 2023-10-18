@@ -6,11 +6,13 @@ func _ready():
 	MAX_HP = 100
 	SPEED = 10
 	_animation_player = $AnimationPlayer
-	_sprite.modulate = Color(1,1,1)
+	_sprite.modulate = Color.WHITE
 
 func take_damage(damage):
 	print("Taking damage: ", damage)
-	_animation_player.play("TakeDamage")
+	_sprite.modulate = Color.RED
+	await get_tree().create_timer(.1).timeout
+	_sprite.modulate = Color.WHITE
 	_cur_HP -= damage
 	_health_bar.value = _cur_HP
 	
@@ -36,3 +38,6 @@ func _physics_process(_delta):
 	motion = motion.normalized() * SPEED
 	set_velocity(motion)
 	move_and_slide()
+
+func set_pos(pos: Vector2):
+	position = pos
