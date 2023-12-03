@@ -31,7 +31,7 @@ func spawn_enemies(wave_data):
 		print("setting position to " + str(new_pos.x) + ", " + str(new_pos.y))
 		new_enemy.set_pos(new_pos)
 		add_child(new_enemy, false)
-	
+
 		await get_tree().create_timer(i[1]).timeout
 
 func hello_world():

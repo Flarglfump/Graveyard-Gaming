@@ -1,10 +1,2 @@
 res://default_env.tres
 res://Graveyard.tscn
-res://Player/Player.tscn
-res://Enemies/Zombie.tscn
-res://Enemies/Enemy.tscn
-res://Player/PlayerController.gd
-res://Enemies/Enemy.gd
-res://Enemies/Zombie.gd
-res://Graveyard.gd
-res://StartButton.gd

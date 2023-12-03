@@ -25,7 +25,7 @@ func _physics_process(_delta):
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
 	).normalized() * SPEED
-	
+
 	# Handle animation
 	if !Input.is_action_pressed("attack"):
 		_shovel_collider.disabled = true
@@ -37,12 +37,12 @@ func _physics_process(_delta):
 			_facing = "left"
 		elif (motion.y == 0):
 			_stop_movement()
-		
+
 		if (abs(motion.y) > 0):
 			_animation_player.play("WalkRight" if (_facing == "right") else "WalkLeft")
 		elif(abs(motion.x) == 0):
 			_stop_movement()
-		
+
 		# Move the player character
 		set_velocity(motion)
 		move_and_slide()
@@ -59,7 +59,7 @@ func _stop_movement():
 
 func _shovel_attack():
 	_stop_movement()
-	
+
 	if (_facing == "right"):
 		#print("Attack Right")
 		_animation_player.play("AttackRight")
